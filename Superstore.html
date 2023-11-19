@@ -10,6 +10,7 @@
         <thead>
             <tr>
                 <th>Category</th>
+                <th>Sales</th>
                 <th>Profit</th>
             </tr>
         </thead>
@@ -19,10 +20,11 @@
     <script>
         // Load the CSV data
         d3.csv("Sample - Superstore.csv").then(function(data) {
-            // Process the data to group by Category and calculate total profit
+            // Process the data to group by Category and calculate total Sales and Profit
             const groupedData = d3.group(data, d => d.Category);
             const aggregatedData = Array.from(groupedData, ([category, values]) => ({
                 Category: category,
+                Sales: d3.sum(values, d => parseFloat(d.Sales)),
                 Profit: d3.sum(values, d => parseFloat(d.Profit))
             }));
 
@@ -38,11 +40,14 @@
                 .append("tr");
 
             rows.append("td").text(d => d.Category);
-            rows.append("td").text(d => '$' + d.Profit.toFixed(0)); // Display Profit as currency with zero decimal places
+            rows.append("td").text(d => formatCurrency(d.Sales));
+            rows.append("td").text(d => formatCurrency(d.Profit));
         });
+
+        // Function to format numbers as currency with zero decimal places
+        function formatCurrency(number) {
+            return '$' + d3.format(",.0f")(number);
+        }
     </script>
 </body>
 </html>
-
-            
-           
