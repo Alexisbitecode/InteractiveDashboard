@@ -10,7 +10,6 @@
         <thead>
             <tr>
                 <th>Category</th>
-                <th>Sub-Category</th>
                 <th>Profit</th>
             </tr>
         </thead>
@@ -18,30 +17,17 @@
     </table>
 
     <script>
-        // Define the width and height of your visualization (optional)
-        const width = 800;
-        const height = 400;
-
         // Load the CSV data
         d3.csv("Sample - Superstore.csv").then(function(data) {
-            console.log(data); // Add this line for debugging
-
-            // Process the data to group by Category and Sub-Category and calculate total profit
-            const groupedData = d3.group(data, d => d.Category, d => d["Sub-Category"]);
-            const aggregatedData = Array.from(groupedData, ([category, subCategories]) => ({
+            // Process the data to group by Category and calculate total profit
+            const groupedData = d3.group(data, d => d.Category);
+            const aggregatedData = Array.from(groupedData, ([category, values]) => ({
                 Category: category,
-                SubCategory: Array.from(subCategories, ([subCategory, values]) => ({
-                    SubCategory: subCategory,
-                    Profit: d3.sum(values, d => parseFloat(d.Profit))
-                }))
+                Profit: d3.sum(values, d => parseFloat(d.Profit))
             }));
 
-            console.log(aggregatedData); // Add this line for debugging
-
             // Sort the data by Profit in descending order
-            aggregatedData.forEach(category => {
-                category.SubCategory.sort((a, b) => b.Profit - a.Profit);
-            });
+            aggregatedData.sort((a, b) => b.Profit - a.Profit);
 
             // Create rows for the table
             const tableBody = d3.select("#table-body");
@@ -52,9 +38,11 @@
                 .append("tr");
 
             rows.append("td").text(d => d.Category);
-            rows.append("td").text(d => d.SubCategory[0].SubCategory); // Display the top Sub-Category
-            rows.append("td").text(d => d.SubCategory[0].Profit); // Display the top Profit
+            rows.append("td").text(d => '$' + d.Profit.toFixed(0)); // Display Profit as currency with zero decimal places
         });
     </script>
 </body>
 </html>
+
+            
+           
