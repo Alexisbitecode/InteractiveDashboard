@@ -40,7 +40,7 @@
                 .append("tr");
 
             rows.append("td").text(d => d.Category);
-            rows.append("td").text(d => formatCurrency(d.Sales));
+            rows.append("td").html(d => formatCurrency(d.Sales) + '&nbsp;&nbsp;&nbsp;'); // Add multiple spaces between Sales and Profit
             rows.append("td").text(d => formatCurrency(d.Profit));
         });
 
